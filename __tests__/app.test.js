@@ -1,8 +1,6 @@
 const supertest = require('supertest');
 const app = require('../lib/app');
 const request = supertest(app);
-const createResponse = require('../lib/utils/createResponse');
-const parseResponse = require('../lib/utils/createResponse');
 
 describe('createResponse', () => {
   it('can get plain text hi', () => {
@@ -15,12 +13,10 @@ describe('createResponse', () => {
 
   it('can post, returns code 200 and plain text request body', () => {
     return request
-        //Might need to clarify what goes into a request
-      .post('/echo', { body: 'this is a test' })
+      .post('/echo')
+      .send('this is a test')
       .then(res => {
-
-        //Not sure if createResponse is needed for this test just need the response to match a parsedResponse
-        expect(parseResponse(res)).toEqual(createResponse({ body: 'this is the body', contentType:'text/plain', status: '200 OK' }));
+        expect(res.text).toEqual('this is a test');
       });
   });
 
